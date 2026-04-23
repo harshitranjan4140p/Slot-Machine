@@ -13,7 +13,7 @@ public class ReelController : MonoBehaviour
     public float spinDuration = 2f;
     public float stopSmoothTime = 0.25f;
 
-    private bool isSpinning = false;
+    public bool isSpinning = false;
     private int targetIndex = 0;
     public int RandomNumber;
 
@@ -22,7 +22,8 @@ public class ReelController : MonoBehaviour
     {
         if (isSpinning) return;
 
-        RandomNumber = targetIndex = Random.Range(0, 3); // Ramdom
+        targetIndex = Random.Range(0, 3); // Ramdom
+        RandomNumber = targetIndex;
         StartCoroutine(SpinRoutine());
     }
 
@@ -79,7 +80,6 @@ public class ReelController : MonoBehaviour
 
     IEnumerator SmoothStop()
     {
-        // Find symbol we want to land in center
         RectTransform targetSymbol = symbols[targetIndex];
 
         float elapsed = 0f;
@@ -93,11 +93,7 @@ public class ReelController : MonoBehaviour
         while (elapsed < duration)
         {
             float t = elapsed / duration;
-
-            // Smooth easing
             float currentOffset = Mathf.Lerp(startOffset, endOffset, t);
-
-            // 🔥 KEY FIX: apply only delta
             float delta = currentOffset - previousOffset;
 
             foreach (var symbol in symbols)
@@ -117,8 +113,6 @@ public class ReelController : MonoBehaviour
         foreach (var symbol in symbols)
         {
             symbol.anchoredPosition += new Vector2(0, finalDelta);
-
-            GameManager.instance.CheckWin();
         }
     }
 }
