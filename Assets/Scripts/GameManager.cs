@@ -1,16 +1,40 @@
 using UnityEngine;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public static GameManager instance;
+    public ReelController[] reelControllers;
+
+    void Awake()
     {
-        
+        instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Spin()
     {
-        
+        foreach (ReelController reel in reelControllers)
+        {
+            reel.StartSpin();
+        }
+    }
+
+    public void CheckWin()
+    {
+        if (reelControllers == null || reelControllers.Length == 0)
+            return;
+
+        int firstValue = reelControllers[0].RandomNumber;
+
+        foreach (ReelController reel in reelControllers)
+        {
+            if (reel.RandomNumber != firstValue)
+            {
+                Debug.Log("LOSE");
+                return;
+            }
+        }
+
+        Debug.Log("WIN");
     }
 }
